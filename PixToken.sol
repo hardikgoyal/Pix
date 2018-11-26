@@ -11,10 +11,10 @@ import "./MintableToken.sol";
 
 // Set up your contract. 
 
-contract EricToken is MintableToken {
+contract PixToken is MintableToken {
     // Define 3 public state variables: name, symbol, number of decimals. Make sure decimals are always defined as 18.
-    string public constant name = "EricToken";
-    string public constant symbol = "ET";
+    string public constant name = "PixToken";
+    string public constant symbol = "PIX";
     uint8 public constant decimals = 18;
 
 }

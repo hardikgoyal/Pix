@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
 // Import the custom token contract you just wrote.
-import "./EricToken.sol";
+import "./PixToken.sol";
 
 /** This is an assignment to create a smart contract that allows you to run your own token crowdsale.
  *  Your contract will mint your custom token every time a purchase is made by your or your classmates.
@@ -18,7 +18,7 @@ contract MintedCrowdsale {
 
     // Define 4 publicly accessible state variables. 
     // Your custom token being sold.
-    EricToken public token;
+    PixToken public token;
   
     // Wallet address where funds are collected.
     address public wallet;
@@ -43,7 +43,7 @@ contract MintedCrowdsale {
     * 3) Address of your custom token being sold
     * Function modifiers are incredibly useful and effective. Make sure to use the right ones for each Solidity function you write.
     */
-    constructor(uint256 _rate, address _wallet, EricToken _token) public {
+    constructor(uint256 _rate, address _wallet, PixToken _token) public {
         // Set conditions with require statements to make sure the rate is a positive number and the addresses are non-zero.
         require(_rate > 0);
         require(_wallet != address(0));
@@ -105,7 +105,7 @@ contract MintedCrowdsale {
     // Create function that delivers the purchased tokens with two parameters: beneficiary's address and number of tokens.
     function _deliverTokens(address _beneficiary, uint256 _tokenAmount) internal {
         // Set condition that requires contract to mint your custom token with the mint method inherited from your MintableToken contract.
-        require(EricToken(token).mint(_beneficiary, _tokenAmount));
+        require(PixToken(token).mint(_beneficiary, _tokenAmount));
   }
 
     // Create function that executes the deliver function when a purchase has been processed with two parameters: beneficiary's address and number of tokens.
