@@ -13,8 +13,16 @@ import "./MintableToken.sol";
 
 contract PixToken is MintableToken {
     // Define 3 public state variables: name, symbol, number of decimals. Make sure decimals are always defined as 18.
+    // The token would also have a price and an original boolean value to know who's the owner
     string public constant name = "PixToken";
     string public constant symbol = "PIX";
     uint8 public constant decimals = 18;
+    uint256 public price;
+    bool public constant original;
+
+    constructor(unit256 _price, bool _original) {
+    	price = _price;
+    	original = _original;
+    }
 
 }
