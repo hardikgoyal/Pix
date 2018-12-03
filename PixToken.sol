@@ -39,4 +39,16 @@ contract PixToken is MintableToken {
     function getOriginality() public view returns (Originality) {
         return originality;
     }
+
+    function mint(address _to, uint256 _amount) public onlyMinter onlyBeforeMintingFinished returns (bool) {
+        // Call mint function which mints inputted amount and assigns it to an account.
+        _mint(_to, _amount);
+        // Emit the Mint event with appropriate input parameters.    
+        emit Mint(_to, _amount);
+        // Indicate that the operation was successful. 
+
+        updateOriginalityToBought();
+        
+        return true;
+    }
 }
