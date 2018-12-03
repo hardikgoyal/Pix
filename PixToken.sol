@@ -19,13 +19,13 @@ contract PixToken is MintableToken {
     uint8 public constant decimals = 18;
 
     // The token also requires a hash value and an enum that checks what type of photo it is
-    bytes32 public constant hash = "";
-    enum Originality { Original, Bought, Leased };
+    string public hash;
+    enum Originality { Original, Bought, Leased }
     Originality originality;
 
-    constructor(bytes32 _hash) public {
+    constructor(string _hash) public {
         hash = _hash;
-        originality = originality.Original;
+        originality = Originality.Original;
     }
 
     // Change Originality to Bought for tokens that are bought

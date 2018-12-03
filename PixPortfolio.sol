@@ -14,7 +14,7 @@ import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/ownershi
  */
  
 // Set up your contract.
-contract MintedCrowdsale is Ownable {
+contract PixPortfolio is Ownable {
     // Attach SafeMath library functions to the uint256 type.
     using SafeMath for uint256;
 
@@ -25,7 +25,7 @@ contract MintedCrowdsale is Ownable {
     address public wallet;
 
     // Mapping of Tokens (aka photo) addresses
-    mapping(PixToken => uint256) private prices;
+    mapping(address => uint256) private prices;
 
     /** Create event to log token purchase with 4 parameters:
     * 1) Who paid for the tokens (buyer)
@@ -41,14 +41,12 @@ contract MintedCrowdsale is Ownable {
     * 3) Address of your custom token being sold
     * Function modifiers are incredibly useful and effective. Make sure to use the right ones for each Solidity function you write.
     */
-    constructor(address _wallet, PixToken _token) public {
+    constructor(address _wallet) public {
         // Set conditions with require statements to make sure the rate is a positive number and the addresses are non-zero.
         require(_wallet != address(0));
-        require(_token != address(0));
 
         // Set inputs as defined state variables
         wallet = _wallet;
-        token.push(_token);
     }    
 
     // THIS PORTION IS FOR THE CONTRACT'S EXTERNAL INTERFACE.
@@ -58,19 +56,21 @@ contract MintedCrowdsale is Ownable {
     // Fallback functions are functions without a name that serve as a default function.
     // Functions dealing with funds have a special modifier.
     function () external payable {
-        // Call buyTokens function with the address defaulting to the address the message originates from.
-        buyTokens(msg.sender);
+        // no functionality required
     }
 
     // Create the function used for token (photo)purchase with one parameter for the address receiving the token purchase
     // and the token that's being minted(copied) with a Bought status
-    function buyTokens(address _buyer, PixToken _token) public payable {
+    function buyTokens(address _buyer, uint8 _index) public payable {
+        require(_index != 0);
+        require(_index < token.length);
 
         // Define a uint256 variable that is equal to the number of wei sent with the message.
         uint256 weiAmount = msg.value;
 
         // Check if the buyer is sending the correct price amount
-        require(weiAmount = prices[_token]);
+        require(weiAmount != 0);
+        require(weiAmount == prices[_index]);
 
         // Call function that validates an incoming purchase with two parameters, receiver and number of wei sent.
         _preValidatePurchase(_buyer, weiAmount);
@@ -79,7 +79,7 @@ contract MintedCrowdsale is Ownable {
         uint8 tokenAmmount = 1;
 
         // Call function that processes a purchase.
-        _processPurchase(_buyer, tokenAmmount, _token);
+        _processPurchase(_buyer, tokenAmmount, _index);
 
         // Raise the event associated with a token purchase.
         emit TokenPurchase(msg.sender, _buyer, weiAmount, tokenAmmount);
@@ -90,32 +90,40 @@ contract MintedCrowdsale is Ownable {
 
     // Upload photo address to map and array for storing and tracking purposes
     // called by the owner of the contract through the front end website
-    function _uploadPhoto(PixToken _tokenAddress, uint256 _price) onlyOwner external {
+    function uploadPhoto(PixToken _tokenAddress, uint256 _price) onlyOwner external {
         //add address to array and map with price
         require(_price != 0);
         token.push(_tokenAddress);
         prices[_tokenAddress] = _price;
     }
+    
+    function displayPhotos() external view returns(PixToken[]) {
+        return token;
+    }
+    
+    // function setPrice(uint256 _index, uint256 _price) external {
+        
+    // }
 
     // THIS PORTION IS FOR THE CONTRACT'S INTERNAL INTERFACE.
     // Remember, the following functions are for the contract's internal interface.
     
     // Create function that validates an incoming purchase with two parameters: buyer's address and value of wei.
-    function _preValidatePurchase(address _buyer, uint256 _weiAmount) internal {
+    function _preValidatePurchase(address _buyer, uint256 _weiAmount) pure internal {
         // Set conditions to make sure the buyer's address and the value of wei involved in purchase are non-zero.
         require(_buyer != address(0));
         require(_weiAmount != 0);
     }
 
     // Create function that delivers the purchased tokens with two parameters: buyer's address and number of tokens.
-    function _deliverTokens(address _buyer, uint8 _tokenAmount, PixToken _token) internal {
+    function _deliverTokens(address _buyer, uint8 _tokenAmount, uint8 _index) internal {
         // Set condition that requires contract to mint your custom token with the mint method inherited from your MintableToken contract.
-        require(PixToken(_token).mint(_buyer, _tokenAmount));
+        require(PixToken(token[_index]).mint(_buyer, _tokenAmount));
     }
 
     // Create function that executes the deliver function when a purchase has been processed with two parameters: buyer's address and number of tokens.
-    function _processPurchase(address _buyer, uint8 _tokenAmount, PixToken _token) internal {
-        _deliverTokens(_buyer, _tokenAmount, _token);
+    function _processPurchase(address _buyer, uint8 _tokenAmount, uint8 _index) internal {
+        _deliverTokens(_buyer, _tokenAmount, _index);
     }
 
     // Create function to store ETH from purchases into a wallet address.
