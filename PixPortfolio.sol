@@ -35,6 +35,12 @@ contract PixPortfolio is Ownable {
     */
     event TokenPurchase(address indexed purchaser, address indexed buyer, uint256 value, uint8 amount);
 
+    /** Create event to log photo upload with parameters:
+    * 1) Uploaded photo address
+    * 2) Price of the photo
+    */
+    event UploadPhoto(PixToken _token, uint256 _price);
+
     /** Create publicly accessible constructor function with 3 parameters:
     * 1) Rate of how many token units a buyer gets per wei
     * 2) Wallet address where funds are collected
@@ -62,7 +68,7 @@ contract PixPortfolio is Ownable {
     // Create the function used for token (photo)purchase with one parameter for the address receiving the token purchase
     // and the token that's being minted(copied) with a Bought status
     function buyTokens(address _buyer, uint8 _index) public payable {
-        require(_index != 0);
+        require(_index >= 0);
         require(_index < token.length);
 
         // Define a uint256 variable that is equal to the number of wei sent with the message.
@@ -95,6 +101,8 @@ contract PixPortfolio is Ownable {
         require(_price != 0);
         token.push(_tokenAddress);
         prices[_tokenAddress] = _price;
+
+        emit UploadPhoto(_tokenAddress, _price);
     }
     
     function displayPhotos() external view returns(PixToken[]) {
