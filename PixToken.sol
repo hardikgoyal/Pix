@@ -17,12 +17,26 @@ contract PixToken is MintableToken {
     string public constant name = "PixToken";
     string public constant symbol = "PIX";
     uint8 public constant decimals = 18;
-    uint256 public price;
-    bool public constant original;
 
-    constructor(unit256 _price, bool _original) {
-    	price = _price;
-    	original = _original;
+    // The token also requires a hash value and an enum that checks what type of photo it is
+    bytes32 public constant hash = "";
+    enum Originality { Original, Bought, Leased };
+    Originality originality;
+
+    constructor(bytes32 _hash) public {
+        hash = _hash;
+        originality = originality.Original;
     }
 
+    function updateOriginalityToBought() public {
+        originality = Originality.Bought;
+    }
+
+    function updateOriginalityToLeased() public {
+        originality = Originality.Leased;
+    }
+
+    function getOriginality() public view returns (Originality) {
+        return originality;
+    }
 }
