@@ -28,18 +28,22 @@ contract PixToken is MintableToken {
         originality = originality.Original;
     }
 
-    function updateOriginalityToBought() public {
+    // Change Originality to Bought for tokens that are bought
+    function updateOriginalityToBought() private {
         originality = Originality.Bought;
     }
 
-    function updateOriginalityToLeased() public {
+    // Future function that could be used with the smart contract implements leasing features for phtoos
+    function updateOriginalityToLeased() private {
         originality = Originality.Leased;
     }
 
+    // get function for Originality
     function getOriginality() public view returns (Originality) {
         return originality;
     }
 
+    // minting tokens with Bought Originality
     function mint(address _to, uint256 _amount) public onlyMinter onlyBeforeMintingFinished returns (bool) {
         // Call mint function which mints inputted amount and assigns it to an account.
         _mint(_to, _amount);
@@ -47,6 +51,7 @@ contract PixToken is MintableToken {
         emit Mint(_to, _amount);
         // Indicate that the operation was successful. 
 
+        //update originality since it would be for buyers
         updateOriginalityToBought();
         
         return true;
