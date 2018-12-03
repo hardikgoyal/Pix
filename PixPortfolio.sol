@@ -67,7 +67,7 @@ contract PixPortfolio is Ownable {
 
     // Create the function used for token (photo)purchase with one parameter for the address receiving the token purchase
     // and the token that's being minted(copied) with a Bought status
-    function buyTokens(address _buyer, uint8 _index) public payable {
+    function buyTokens(address _buyer, uint256 _index) public payable {
         require(_index >= 0);
         require(_index < token.length);
 
@@ -75,8 +75,7 @@ contract PixPortfolio is Ownable {
         uint256 weiAmount = msg.value;
 
         // Check if the buyer is sending the correct price amount
-        require(weiAmount != 0);
-        require(weiAmount == prices[_index]);
+        require(weiAmount == price[token[_index]];
 
         // Call function that validates an incoming purchase with two parameters, receiver and number of wei sent.
         _preValidatePurchase(_buyer, weiAmount);
@@ -124,13 +123,13 @@ contract PixPortfolio is Ownable {
     }
 
     // Create function that delivers the purchased tokens with two parameters: buyer's address and number of tokens.
-    function _deliverTokens(address _buyer, uint8 _tokenAmount, uint8 _index) internal {
+    function _deliverTokens(address _buyer, uint8 _tokenAmount, uint256 _index) internal {
         // Set condition that requires contract to mint your custom token with the mint method inherited from your MintableToken contract.
         require(PixToken(token[_index]).mint(_buyer, _tokenAmount));
     }
 
     // Create function that executes the deliver function when a purchase has been processed with two parameters: buyer's address and number of tokens.
-    function _processPurchase(address _buyer, uint8 _tokenAmount, uint8 _index) internal {
+    function _processPurchase(address _buyer, uint8 _tokenAmount, uint256 _index) internal {
         _deliverTokens(_buyer, _tokenAmount, _index);
     }
 

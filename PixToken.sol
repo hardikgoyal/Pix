@@ -23,6 +23,5 @@ contract PixToken is MintableToken {
 
     constructor(string _hash) public {
         hash = _hash;
-        originality = Originality.Original;
     }
 }
