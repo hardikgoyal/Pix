@@ -43,6 +43,17 @@ contract MintableToken is ERC20, Ownable {
         return mintingFinished_;
     }
 
+    // minting tokens with Bought Originality
+    function mint(address _to, uint256 _amount) public onlyMinter onlyBeforeMintingFinished returns (bool) {
+        // Call mint function which mints inputted amount and assigns it to an account.
+        _mint(_to, _amount);
+        // Emit the Mint event with appropriate input parameters.    
+        emit Mint(_to, _amount);
+        // Indicate that the operation was successful. 
+        
+        return true;
+    }
+
     // Create function to stop minting new tokens. Modifiers modifiers modifiers.
     // Write the function so that it returns a boolean that indicates if the operation was successful.
     function finishMinting() public onlyOwner onlyBeforeMintingFinished returns (bool) {
