@@ -4,14 +4,6 @@ pragma solidity ^0.4.24;
 import "./PixToken.sol";
 // Import OpenZeppelin's Ownable contract.
 import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/ownership/Ownable.sol";
-
-/** This is an assignment to create a smart contract that allows you to run your own token crowdsale.
- *  Your contract will mint your custom token every time a purchase is made by your or your classmates.
- *  We've provided you with the pseudocode and some hints to guide you in the right direction.
- *  Make sure to implement the best practices you learned during the Solidity Walkthrough segment.
- *  Check for errors by compiling often. Ask your classmates for help - we highly encourage student collaboration.
- *  You should be able to deploy your crowdsale contract onto the Rinkeby testnet and buy/sell your classmates' tokens.
- */
  
 // Set up your contract.
 contract PixPortfolio is Ownable {
@@ -19,13 +11,13 @@ contract PixPortfolio is Ownable {
     using SafeMath for uint256;
 
     // Array to save all the tokens
-    PixToken[] public token;
+    PixToken[] public photoTokens;
   
     // Owner's wallet
-    address public wallet;
+    address public ownerWallet;
 
     // Mapping of Tokens (aka photo) addresses
-    mapping(address => uint256) private prices;
+    mapping(address => uint256) private photoPrices;
 
     /** Create event to log token purchase with 4 parameters:
     * 1) Who paid for the tokens (buyer)
@@ -33,7 +25,7 @@ contract PixPortfolio is Ownable {
     * 3) Number of weis paid for purchase (price)
     * 4) Amount of tokens purchased = 1
     */
-    event TokenPurchase(address indexed purchaser, address indexed buyer, uint256 value, uint8 amount);
+    event photoPurchase(address indexed purchaser, address indexed buyer, uint256 value, uint8 amount);
 
     /** Create event to log photo upload with parameters:
     * 1) Uploaded photo address
@@ -52,7 +44,7 @@ contract PixPortfolio is Ownable {
         require(_wallet != address(0));
 
         // Set inputs as defined state variables
-        wallet = _wallet;
+        ownerWallet = _wallet;
     }    
 
     // THIS PORTION IS FOR THE CONTRACT'S EXTERNAL INTERFACE.
@@ -67,7 +59,7 @@ contract PixPortfolio is Ownable {
 
     // Create the function used for token (photo)purchase with one parameter for the address receiving the token purchase
     // and the token that's being minted(copied) with a Bought status
-    function buyTokens(address _buyer, uint256 _index) public payable {
+    function buyPhotoToken(address _buyer, uint256 _index) public payable {
         require(_index >= 0);
         require(_index < token.length);
 
@@ -87,7 +79,7 @@ contract PixPortfolio is Ownable {
         _processPurchase(_buyer, tokenAmmount, _index);
 
         // Raise the event associated with a token purchase.
-        emit TokenPurchase(msg.sender, _buyer, weiAmount, tokenAmmount);
+        emit photoPurchase(msg.sender, _buyer, weiAmount, tokenAmmount);
     
         // Call function that stores ETH from purchases into a wallet address.
         _forwardFunds();
@@ -95,22 +87,23 @@ contract PixPortfolio is Ownable {
 
     // Upload photo address to map and array for storing and tracking purposes
     // called by the owner of the contract through the front end website
-    function uploadPhoto(PixToken _tokenAddress, uint256 _price) onlyOwner external {
+    function uploadPhoto(PixToken _photoTokenAddress, uint256 _photoPrice) onlyOwner external {
         //add address to array and map with price
-        require(_price != 0);
-        token.push(_tokenAddress);
-        prices[_tokenAddress] = _price;
+        require(_photoPrice != 0);
+        photoTokens.push(_photoTokenAddress);
+        photoPrices[_tokenAddress] = _photoPrice;
 
-        emit UploadPhoto(_tokenAddress, _price);
+        emit UploadPhoto(_tokenAddress, _photoPrice);
     }
     
     function displayPhotos() external view returns(PixToken[]) {
-        return token;
+        return photoTokens;
     }
     
-    // function setPrice(uint256 _index, uint256 _price) external {
-        
-    // }
+    function setPrice(uint256 _index, uint256 _price) external {
+        photoPrices[photoTokens[_index]] = _price;
+
+    }
 
     // THIS PORTION IS FOR THE CONTRACT'S INTERNAL INTERFACE.
     // Remember, the following functions are for the contract's internal interface.
@@ -135,6 +128,6 @@ contract PixPortfolio is Ownable {
 
     // Create function to store ETH from purchases into a wallet address.
     function _forwardFunds() internal {
-        wallet.transfer(msg.value);
+        ownerWallet.transfer(msg.value);
     }
 }

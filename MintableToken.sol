@@ -5,15 +5,6 @@ import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/token/ER
 // Import OpenZeppelin's Ownable contract.
 import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
-
-/** Create contract that extends the standard ERC20 token contract with minting capabilities.
- *  We've provided you with the pseudocode and some hints to guide you in the right direction.
- *  Some of the initial conditions are written out for you to ease you into writing the contracts.
- *  Make sure to implement the best practices you learned during the Solidity Walkthrough segment.
- *  Check for errors by compiling often. Ask your classmates for help - we highly encourage student collaboration.
- */
- 
-// Set up your contract so that it inherits functionality from OpenZeppelin's StandardToken and Ownable.
 contract MintableToken is ERC20, Ownable {
 
     // Create event that logs the receiver address and the amount of the token being minted.
