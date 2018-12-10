@@ -1,12 +1,9 @@
 # Pix
 
-Seller uploads a photo (which is hashed) and a price.
-Make the photo a token, the seller can sell that token (photo).
 
-Buyers check what tokens (photo) that are available and buy the token (photo).
+ITP499 Blockchain  
+Fall 2018  
 
-Token would have hash and price attribute.
-This would be minted everytime the sellers uploads a photo to the Dapp.
 
 Transaction?
 Buyer would request to buy a token in exchange for ether.
@@ -34,3 +31,11 @@ Instructions to Run:
 Assumptions:
 - The code should not be able to handle a user uploading same photographs 
 - Multiple users can also upload same photographs right now
+
+Team:
+Hardik Goyal  
+Hyuck Ju Kim  
+Ping Au Lin  
+
+
+note: the code has been adapted from the crowdsale contract done in class
